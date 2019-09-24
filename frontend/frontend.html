@@ -1,0 +1,16 @@
+
+<h1 id="gratitude"> HI! </h1>
+
+
+<script>
+  xhr = new XMLHttpRequest();
+
+  xhr.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      document.getElementById("gratitude").innerHTML = this.responseText;
+    }
+  };
+  xhr.open("GET", "/gratitude_simple");
+
+  xhr.send();
+</script>

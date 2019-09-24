@@ -1,5 +1,4 @@
-from flask import Flask
-from flask import request
+from flask import Flask, request, send_from_directory
 
 import random
 from datetime import datetime
@@ -48,6 +47,14 @@ def gratitudeSimpleSubmit():
 @app.route('/gratitude_simple/all')
 def gratitudeSimpleAll():
     return "<br />".join(gratitudeReasons)
+
+@app.route('/frontend/<path:path>')
+def send_frontend(path):
+    return send_from_directory('frontend', path)
+
+@app.route('/frontend')
+def send_frontend_index():
+    return send_from_directory('frontend', "frontend.html")
 
 
 
