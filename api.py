@@ -48,3 +48,8 @@ def gratitudeSimpleSubmit():
 @app.route('/gratitude_simple/all')
 def gratitudeSimpleAll():
     return "<br />".join(gratitudeReasons)
+
+
+
+if __name__ == "__main__":
+    application.run(host='0.0.0.0')
