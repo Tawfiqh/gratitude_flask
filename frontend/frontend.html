@@ -73,11 +73,15 @@
 <body>
 
     <div class="teaser">
-      <h1 id="gratitude"></h1>
+      <h1 id="gratitude"> Smile and be grateful ☺️ </h1>
     </div>
 
 
     <script>
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const myPassword = urlParams.get('password');
+
       xhr = new XMLHttpRequest();
 
       xhr.onreadystatechange = function() {
@@ -85,7 +89,7 @@
           document.getElementById("gratitude").innerHTML = this.responseText;
         }
       };
-      xhr.open("GET", "/gratitude");
+      xhr.open("GET", "/gratitude?password="+myPassword);
 
       xhr.send();
     </script>
