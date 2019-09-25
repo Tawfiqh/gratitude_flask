@@ -1,4 +1,4 @@
-from flask import Flask, request, send_from_directory, render_template, url_for
+from flask import Flask, request, send_from_directory, render_template, url_for, abort
 import os
 
 import random
@@ -95,8 +95,12 @@ heroku = Heroku(app)
 
 if(is_development_mode()):
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///dataentry.sqlite3';
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
+
 
 class Dataentry(db.Model):
     __tablename__ = "dataentry"
@@ -116,6 +120,12 @@ if(is_development_mode()):
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 @app.route('/gratitude/submit', methods = ['GET'])
 def post_to_db():
+
+    password = request.args.get('password')
+    if(password != os.environ['FLASK_PASSWORD']):
+        abort(400);
+
+
     message = request.args.get('data')
 
     newDatum= Dataentry(message)
