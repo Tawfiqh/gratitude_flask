@@ -1,4 +1,5 @@
 from flask import Flask, request, send_from_directory, render_template, url_for
+import os
 
 import random
 from datetime import datetime
@@ -76,8 +77,11 @@ def send_frontend_index():
 
 
 
-
-
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+#       Environment setup
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+def is_development_mode():
+    return (os.environ['FLASK_ENV'] == "development")
 
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -85,9 +89,13 @@ def send_frontend_index():
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 from flask_sqlalchemy import SQLAlchemy
 import sys
+from flask_heroku import Heroku
 
+heroku = Heroku(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///dataentry.sqlite3'
+if(is_development_mode()):
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///dataentry.sqlite3';
+
 db = SQLAlchemy(app)
 
 class Dataentry(db.Model):
@@ -144,8 +152,6 @@ def gratitudeReadAll():
         allReasons.append(reason.data)
 
     return "<br />".join(allReasons)
-
-
 
 
 
