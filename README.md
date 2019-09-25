@@ -16,3 +16,9 @@ Then in the python console:
 >>> from api import db
 >>> db.create_all()
 ```
+
+
+Can then create entries through command line easilly.
+```fish
+curl -G "https://gratitude-py.herokuapp.com/gratitude/submit" --data-urlencode "password=password" --data-urlencode "data=Warmth"
+```
