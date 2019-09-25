@@ -118,13 +118,15 @@ if(is_development_mode()):
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 #       Gratitude complex
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-@app.route('/gratitude/submit', methods = ['GET'])
-def post_to_db():
-
+def check_password():
     password = request.args.get('password')
     if(password != os.environ['FLASK_PASSWORD']):
         abort(400);
 
+@app.route('/gratitude/submit', methods = ['GET'])
+def post_to_db():
+
+    check_password()
 
     message = request.args.get('data')
 
@@ -144,6 +146,7 @@ def post_to_db():
 
 @app.route('/gratitude')
 def gratitudeComplex():
+    check_password();
     random.seed()
     gratitudeReasonObjects = Dataentry.query.all()
 
@@ -156,6 +159,7 @@ def gratitudeComplex():
 
 @app.route('/gratitude/all')
 def gratitudeReadAll():
+    check_password();
     gratitudeReasons = Dataentry.query.all()
 
     allReasons = [];
