@@ -106,7 +106,9 @@ class Dataentry(db.Model):
     def __init__ (self, data):
         self.data = data
 
-db.create_all()
+
+if(is_development_mode()):
+    db.create_all()
 
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -152,7 +154,6 @@ def gratitudeReadAll():
         allReasons.append(reason.data)
 
     return "<br />".join(allReasons)
-
 
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
