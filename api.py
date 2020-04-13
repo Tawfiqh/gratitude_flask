@@ -177,8 +177,12 @@ def gratitudeReadAll():
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 #       Adkhar app
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-@app.route('/adhkar')
-def adhkar_with_time():
+@app.route('/adhkar/')
+def adhkar_frontend():
+    return send_from_directory('adhkar_frontend', "frontend.html")
+
+@app.route('/adhkar/query')
+def adhkar_time_query():
     time = request.args.get('time')
     if(time == 0 or time == None):
         time = 60
