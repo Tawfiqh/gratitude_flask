@@ -176,14 +176,20 @@ function custom_time(){
     request_adhkar(time)
 }
 
+function valid_key(key){
+    var doesnt_exist = isNaN(key) || key == ""
+
+    return !doesnt_exist
+}
+
 function parseResponseToHTML(dhikr){
     finalText  =  '<div class="result_box">'
 
-    if(dhikr.arabic && dhikr.arabic){
+    if(dhikr.arabic && valid_key(dhikr.arabic)){
         finalText += `<h2>${dhikr.arabic}</h2>`
     }
 
-    if(dhikr.english && dhikr.english){
+    if(dhikr.english && valid_key(dhikr.english)){
         finalText += `<h2>${dhikr.english}</h2>`
     }
 
