@@ -17,6 +17,20 @@ Then in the python console:
 >>> db.create_all()
 ```
 
+for local:
+```bash
+export FLASK_APP=api.py
+export FLASK_ENV=development
+export FLASK_PASSWORD=abc
+flask shell
+```
+
+and then run:
+```
+>>> from api import db
+>>> db.create_all()
+```
+
 
 Can then create entries through command line easilly.
 ```fish

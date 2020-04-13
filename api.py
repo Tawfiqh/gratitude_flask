@@ -1,9 +1,18 @@
-from flask import Flask, request, send_from_directory, render_template, url_for, abort
+from flask import Flask, request, send_from_directory, render_template, url_for, abort, Blueprint
 import os
 
 import random
-from datetime import datetime
+import json
+
 app = Flask(__name__)
+
+
+# from adhkar import adhkarRoutes
+# app.register_blueprint(adhkarRoutes, url_prefix='/adhkar')
+
+from misc_routes import miscRoutes
+app.register_blueprint(miscRoutes)
+
 
 gratitudeReasons = [
     "Loving parents",
@@ -17,26 +26,6 @@ gratitudeReasons = [
     "Warmth",
     "Peaceful political climate",
 ];
-
-
-# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-#       Inane miscelania
-# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-@app.route('/hi')
-def hello_world2():
-    return 'Hi, World!'
-
-
-@app.route('/time')
-def current_time():
-    today = datetime.now()
-    result =  today.strftime("%H:%M:%S on %d %B, %Y: ") + "Hello world"
-    return result;
-
-
-
-
-
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 #       Gratitude simple
@@ -115,11 +104,25 @@ if(is_development_mode()):
     db.create_all()
 
 
+class Adhkarentry(db.Model):
+    __tablename__ = "adhkar"
+    id = db.Column(db.Integer, primary_key=True)
+    arabic = db.Column(db.Text())
+    english = db.Column(db.Text())
+    secondsToRecite = db.Column(db.Integer)
+    minutesToRecite = db.Column(db.Integer)
+    shortDescription = db.Column(db.Text())
+
+    def __init__ (self, data):
+        self.data = data
+
+
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 #       Gratitude complex
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 def check_password():
     password = request.args.get('password')
+    # print("password:", password)
     if(password != os.environ['FLASK_PASSWORD']):
         abort(400);
 
@@ -169,6 +172,24 @@ def gratitudeReadAll():
 
     return "<br />".join(allReasons)
 
+
+
+@app.route('/adhkar/all')
+def all():
+    adhkar_list = Adhkarentry.query.all()
+
+    result = [];
+
+    for dhikr in adhkar_list:
+        oneResult = {
+            "arabic": dhikr.arabic,
+            "english": dhikr.english,
+            "description": dhikr.shortDescription,
+            "time_in_seconds": dhikr.secondsToRecite,
+        }
+        result.append(oneResult)
+
+    return json.dumps(result) #"<br />".join(result)
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 #       Setup and run main app
