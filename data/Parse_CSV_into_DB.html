@@ -13115,7 +13115,7 @@ div#notebook {
 
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[53]:</div>
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -13132,7 +13132,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[54]:</div>
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
@@ -13148,7 +13148,7 @@ div#notebook {
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[54]:</div>
+    <div class="prompt output_prompt">Out[2]:</div>
 
 
 
@@ -13238,20 +13238,40 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[73]:</div>
+<div class="prompt input_prompt">In&nbsp;[65]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">sqlite3</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">local</span> <span class="o">=</span> <span class="kc">True</span><span class="p">;</span>
 
-<span class="c1"># Create a SQL connection to our SQLite database</span>
-<span class="n">con</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">,</span><span class="s2">&quot;dataentry.sqlite3&quot;</span><span class="p">))</span>
+<span class="k">if</span><span class="p">(</span><span class="n">local</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">sqlite3</span>
+    <span class="kn">import</span> <span class="nn">os</span>
 
-<span class="n">cur</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+    <span class="c1"># Create a SQL connection to our SQLite database</span>
+    <span class="n">con</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">,</span><span class="s2">&quot;dataentry.sqlite3&quot;</span><span class="p">))</span>
 
-<span class="c1"># The result of a &quot;cursor.execute&quot; can be iterated over by row</span>
-<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;SELECT * FROM adhkar;&#39;</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+    <span class="n">cur</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+    <span class="c1"># The result of a &quot;cursor.execute&quot; can be iterated over by row</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;SELECT * FROM adhkar;&#39;</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+        
+<span class="k">else</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">psycopg2</span>
+
+    <span class="c1"># con = sqlite3.connect(os.path.join(&quot;..&quot;,&quot;dataentry.sqlite3&quot;))</span>
+    <span class="n">con</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+                            <span class="n">database</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> 
+                            <span class="n">user</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> 
+                            <span class="n">port</span><span class="o">=</span><span class="mi">1111</span><span class="p">,</span>
+                            <span class="n">password</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+
+    <span class="n">cur</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+    <span class="c1"># The result of a &quot;cursor.execute&quot; can be iterated over by row</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">cur</span><span class="o">.</span><span class="n">fetchall</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13267,21 +13287,18 @@ div#notebook {
     <div class="prompt"></div>
 
 
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>(1, None, None, 120, 2, &#39;salawat x 33&#39;)
-(2, None, None, 360, 6, &#39;salawat x 100&#39;)
-(3, None, None, 60, 1, &#39;subhanallah x 33, alhamdulillah x 33, allahuakbar x 33&#39;)
-(4, None, None, 18, 0, &#39;subhanallah x 10, alhamdulillah x 10, allahuakbar x 10&#39;)
-(5, None, None, 0, 0, &#39;hasbunallahu wa nimal wakeel&#39;)
-(6, None, None, 18, 0, &#39;la ilaha illallah x 10&#39;)
-(7, None, None, 30, 0, &#39;ayat al kursi&#39;)
-(8, None, None, 30, 0, &#39;al fatihah&#39;)
-(9, None, None, 6, 0, &#39;Q2:201&#39;)
-(10, None, None, 60, 1, &#39;astaghfirullah x 100&#39;)
-(11, None, None, 30, 0, &#39;la hawla wa la quwwata illa billah x 10&#39;)
-(12, None, None, 90, 1, &#39;la hawla wa la quwwata illa billah x 33&#39;)
-(13, None, None, 300, 5, &#39;la hawla wa la quwwata illa billah x 100&#39;)
-</pre>
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">ProgrammingError</span>                          Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-65-f1d802ea83f7&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-intense-fg ansi-bold">     29</span> 
+<span class="ansi-green-intense-fg ansi-bold">     30</span>     <span class="ansi-red-fg"># The result of a &#34;cursor.execute&#34; can be iterated over by row</span>
+<span class="ansi-green-fg">---&gt; 31</span><span class="ansi-red-fg">     </span><span class="ansi-green-fg">for</span> row <span class="ansi-green-fg">in</span> cur<span class="ansi-blue-fg">.</span>fetchall<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">     32</span>         print<span class="ansi-blue-fg">(</span>row<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     33</span> 
+
+<span class="ansi-red-fg">ProgrammingError</span>: no results to fetch</pre>
 </div>
 </div>
 
@@ -13291,18 +13308,24 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[74]:</div>
+<div class="prompt input_prompt">In&nbsp;[66]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
     <span class="n">shortDesc</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;shortDescription&#39;</span><span class="p">]</span>
     <span class="n">search</span> <span class="o">=</span> <span class="p">(</span><span class="n">shortDesc</span><span class="p">,)</span> <span class="c1">#https://docs.python.org/2/library/sqlite3.html</span>
-    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;SELECT * FROM adhkar WHERE shortDescription=?&#39;</span><span class="p">,</span> <span class="n">search</span><span class="p">)</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="n">local</span><span class="p">):</span>
+        <span class="n">sqlSearch</span><span class="o">=</span><span class="s1">&#39;SELECT * FROM adhkar WHERE &quot;shortDescription&quot; = ?;&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sqlSearch</span><span class="o">=</span><span class="s1">&#39;SELECT * FROM adhkar WHERE &quot;shortDescription&quot; = </span><span class="si">%s</span><span class="s1">;&#39;</span>
+    
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sqlSearch</span><span class="p">,</span> <span class="n">search</span><span class="p">)</span>
     <span class="n">db_result</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
     <span class="k">if</span><span class="p">(</span><span class="n">db_result</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;already_found:&#39;</span><span class="p">,</span><span class="n">db_result</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;not found:&#39;</span><span class="p">,</span><span class="n">search</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;not found - inserting:&#39;</span><span class="p">,</span><span class="n">shortDesc</span><span class="p">)</span>
         <span class="n">seconds</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;secondsToRecite&#39;</span><span class="p">]</span>
         <span class="n">minutes</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;minutesToRecite&#39;</span><span class="p">]</span>
         
@@ -13319,14 +13342,19 @@ div#notebook {
         <span class="n">minutes</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">minutes</span><span class="p">)</span>
         
         <span class="n">adhkar_row</span> <span class="o">=</span> <span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;arabic&#39;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;english&#39;</span><span class="p">],</span> <span class="n">seconds</span><span class="p">,</span> <span class="n">minutes</span><span class="p">,</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;shortDescription&#39;</span><span class="p">])</span>
-        
-        <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;INSERT INTO adhkar (arabic, english, secondsToRecite, minutesToRecite, shortDescription) VALUES (?,?,?,?,?)&quot;</span><span class="p">,</span> <span class="n">adhkar_row</span><span class="p">)</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">local</span><span class="p">):</span>
+            <span class="n">sqlInsert</span><span class="o">=</span><span class="s1">&#39;INSERT INTO adhkar (arabic, english, &quot;secondsToRecite&quot;, &quot;minutesToRecite&quot;, &quot;shortDescription&quot;) VALUES (?,?,?,?,?)&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sqlInsert</span><span class="o">=</span><span class="s1">&#39;INSERT INTO adhkar (arabic, english, &quot;secondsToRecite&quot;, &quot;minutesToRecite&quot;, &quot;shortDescription&quot;) VALUES (</span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">)&#39;</span>
+    
+        <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sqlInsert</span><span class="p">,</span> <span class="n">adhkar_row</span><span class="p">)</span>
         <span class="c1"># could batch these up and do them at the end </span>
         <span class="c1"># but if we do it per-row it avoids duplicates in the same file. </span>
         <span class="c1"># so it&#39;s better todo it per-row.</span>
-        
-<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;SELECT * FROM adhkar;&#39;</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+
+<span class="n">cur</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="n">con</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+<span class="n">con</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
 
     </div>
@@ -13343,32 +13371,19 @@ div#notebook {
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>already_found: (1, None, None, 120, 2, &#39;salawat x 33&#39;)
-already_found: (2, None, None, 360, 6, &#39;salawat x 100&#39;)
-already_found: (3, None, None, 60, 1, &#39;subhanallah x 33, alhamdulillah x 33, allahuakbar x 33&#39;)
-already_found: (4, None, None, 18, 0, &#39;subhanallah x 10, alhamdulillah x 10, allahuakbar x 10&#39;)
-already_found: (5, None, None, 0, 0, &#39;hasbunallahu wa nimal wakeel&#39;)
-already_found: (6, None, None, 18, 0, &#39;la ilaha illallah x 10&#39;)
-already_found: (7, None, None, 30, 0, &#39;ayat al kursi&#39;)
-already_found: (8, None, None, 30, 0, &#39;al fatihah&#39;)
-already_found: (9, None, None, 6, 0, &#39;Q2:201&#39;)
-already_found: (10, None, None, 60, 1, &#39;astaghfirullah x 100&#39;)
-already_found: (11, None, None, 30, 0, &#39;la hawla wa la quwwata illa billah x 10&#39;)
-already_found: (12, None, None, 90, 1, &#39;la hawla wa la quwwata illa billah x 33&#39;)
-already_found: (13, None, None, 300, 5, &#39;la hawla wa la quwwata illa billah x 100&#39;)
-(1, None, None, 120, 2, &#39;salawat x 33&#39;)
-(2, None, None, 360, 6, &#39;salawat x 100&#39;)
-(3, None, None, 60, 1, &#39;subhanallah x 33, alhamdulillah x 33, allahuakbar x 33&#39;)
-(4, None, None, 18, 0, &#39;subhanallah x 10, alhamdulillah x 10, allahuakbar x 10&#39;)
-(5, None, None, 0, 0, &#39;hasbunallahu wa nimal wakeel&#39;)
-(6, None, None, 18, 0, &#39;la ilaha illallah x 10&#39;)
-(7, None, None, 30, 0, &#39;ayat al kursi&#39;)
-(8, None, None, 30, 0, &#39;al fatihah&#39;)
-(9, None, None, 6, 0, &#39;Q2:201&#39;)
-(10, None, None, 60, 1, &#39;astaghfirullah x 100&#39;)
-(11, None, None, 30, 0, &#39;la hawla wa la quwwata illa billah x 10&#39;)
-(12, None, None, 90, 1, &#39;la hawla wa la quwwata illa billah x 33&#39;)
-(13, None, None, 300, 5, &#39;la hawla wa la quwwata illa billah x 100&#39;)
+<pre>not found - inserting: salawat x 33
+not found - inserting: salawat x 100
+not found - inserting: subhanallah x 33, alhamdulillah x 33, allahuakbar x 33
+not found - inserting: subhanallah x 10, alhamdulillah x 10, allahuakbar x 10
+not found - inserting: hasbunallahu wa nimal wakeel
+not found - inserting: la ilaha illallah x 10
+not found - inserting: ayat al kursi
+not found - inserting: al fatihah
+not found - inserting: Q2:201
+not found - inserting: astaghfirullah x 100
+not found - inserting: la hawla wa la quwwata illa billah x 10
+not found - inserting: la hawla wa la quwwata illa billah x 33
+not found - inserting: la hawla wa la quwwata illa billah x 100
 </pre>
 </div>
 </div>
@@ -13379,11 +13394,10 @@ already_found: (13, None, None, 300, 5, &#39;la hawla wa la quwwata illa billah 
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[71]:</div>
+<div class="prompt input_prompt">In&nbsp;[47]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">con</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
-<span class="n">con</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span> 
 </pre></div>
 
     </div>

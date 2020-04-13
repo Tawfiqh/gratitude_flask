@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[53]:
+# In[1]:
 
 
 import pandas as pd
@@ -11,40 +11,67 @@ df = pd.read_csv(filename)
 # df.head()
 
 
-# In[54]:
+# In[2]:
 
 
 df.head()
 
 
-# In[73]:
+# In[65]:
 
 
-import sqlite3
-import os
+local = True;
 
-# Create a SQL connection to our SQLite database
-con = sqlite3.connect(os.path.join("..","dataentry.sqlite3"))
+if(local):
+    import sqlite3
+    import os
 
-cur = con.cursor()
+    # Create a SQL connection to our SQLite database
+    con = sqlite3.connect(os.path.join("..","dataentry.sqlite3"))
 
-# The result of a "cursor.execute" can be iterated over by row
-for row in cur.execute('SELECT * FROM adhkar;'):
-    print(row)
+    cur = con.cursor()
+
+    # The result of a "cursor.execute" can be iterated over by row
+    for row in cur.execute('SELECT * FROM adhkar;'):
+        print(row)
+        
+else:
+    import psycopg2
+
+    # con = sqlite3.connect(os.path.join("..","dataentry.sqlite3"))
+    con = psycopg2.connect(host="",
+                            database="", 
+                            user="", 
+                            port=1111,
+                            password="")
 
 
-# In[74]:
+    cur = con.cursor()
+
+    # The result of a "cursor.execute" can be iterated over by row
+    for row in cur.fetchall():
+        print(row)
+
+
+# In[66]:
+
 
 
 for index, row in df.iterrows():
     shortDesc = row['shortDescription']
     search = (shortDesc,) #https://docs.python.org/2/library/sqlite3.html
-    cur.execute('SELECT * FROM adhkar WHERE shortDescription=?', search)
+
+    if(local):
+        sqlSearch='SELECT * FROM adhkar WHERE "shortDescription" = ?;'
+    else:
+        sqlSearch='SELECT * FROM adhkar WHERE "shortDescription" = %s;'
+    
+    cur.execute(sqlSearch, search)
     db_result = cur.fetchone()
     if(db_result):
         print('already_found:',db_result)
     else:
-        print('not found:',search)
+        print('not found - inserting:',shortDesc)
         seconds = row['secondsToRecite']
         minutes = row['minutesToRecite']
         
@@ -61,21 +88,25 @@ for index, row in df.iterrows():
         minutes = int(minutes)
         
         adhkar_row = (row['arabic'], row['english'], seconds, minutes, row['shortDescription'])
-        
-        cur.execute("INSERT INTO adhkar (arabic, english, secondsToRecite, minutesToRecite, shortDescription) VALUES (?,?,?,?,?)", adhkar_row)
+        if(local):
+            sqlInsert='INSERT INTO adhkar (arabic, english, "secondsToRecite", "minutesToRecite", "shortDescription") VALUES (?,?,?,?,?)'
+        else:
+            sqlInsert='INSERT INTO adhkar (arabic, english, "secondsToRecite", "minutesToRecite", "shortDescription") VALUES (%s,%s,%s,%s,%s)'
+    
+        cur.execute(sqlInsert, adhkar_row)
         # could batch these up and do them at the end 
         # but if we do it per-row it avoids duplicates in the same file. 
         # so it's better todo it per-row.
-        
-for row in cur.execute('SELECT * FROM adhkar;'):
-    print(row)
 
-
-# In[71]:
-
-
+cur.close()
 con.commit()
 con.close()
+
+
+# In[47]:
+
+
+
 
 
 # In[ ]:
