@@ -16,13 +16,16 @@
       margin: 0;
       padding: 0px;
       width: 100%;
+      height: 100vh;
     }
 
     body {
+        min-height: 100%;
         display: table;
         background: #f2709c;  /* fallback for old browsers */
         background: -webkit-linear-gradient(to bottom, #ff9472, #f2709c);  /* Chrome 10-25, Safari 5.1-6 */
         background: linear-gradient(to bottom, #ff9472, #f2709c); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        background-attachment: fixed;
 
     }
 
@@ -47,60 +50,87 @@
     }
 
     h3{
-	  font-style: italic;
-	  font-size: 1em;
-	  /* margin-top: -21px; */
+	  font-size: 36px;
     }
 
-    #resultsContainer, .resultsContainer{
+    .time{
+        font-family: 'Libre Baskerville', serif;
+        font-size: 24px;
+        font-style: italic;
+        font-weight: 200;
+    }
+
+    .grid{
         display: flex;
         display: flex;
         flex-wrap: wrap;
         justify-content: space-around;
     }
 
-
-    /* .button_container{
-        display: flex;
-        flex-direction: column;
-        margin: 0;
-        margin-bottom: 10px;
+    #resultsContainer{
+        margin-top: 30px;
     }
-
-    .button_container p{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 0 20px;
-        margin: 0;
-    }
-
-    .button_container h4{
-        font-style: italic;
-        margin-bottom: 15px;
-    } */
-
     .result_box {
         border-radius: 7px;
         text-align: center;
         width: 500px;
-        margin: 10px;
-
+        margin: 25px 10px;
         border: 1px solid #ffffff;
         background: rgba(240,240,255, 0.45);
         background: rgba(252, 248, 239, 0.1)
     }
 
-    html{
-      height: 100%;
-      height: 100vh;
-    }
-    body {
-      min-height: 100%;
+    .time_button{
+        border: 2px solid white;
+        color: white;
+        /* padding: 15px 32px; */
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        vertical-align: middle;
+        line-height: 25px;
+        border-radius: 100%;
+        width: 150px;
+        height: 150px;
+        font-size: 22px;
+        /* background: rgba(226, 207, 213, 0.34); */
+        background: rgba(243, 220, 227, 0.26);
+        cursor: pointer;
+        font-weight: 600;
     }
 
-    .result_div{
+    .time_button_other{
+
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        align-items: center;
+    }
+
+    #custom_time_input{
+        width: 75%;
         border: 1px solid white;
+        background: rgba(252, 248, 239, 0.1);
+        color: white;
+        font-size: 24px;
+        border-radius: 4px;
+        margin-top: 25px;
+        padding: 7px 0px;
+        text-align: center;
+    }
+
+    .time_button_other .time_button {
+        border: none;
+        background: none;
+        height: 40px;
+        padding: 0;
+    }
+
+    hr{
+        /* display: none */
+        border: 0.1px solid white;
+        margin: 60px 5%;;
     }
 
   </style>
@@ -109,12 +139,42 @@
 
 <body>
 
-    <div class="teaser">
-      <div id="resultsContainer"></div>
+    <h1>How much time do you have?</h1>
+
+    <div class="buttons grid">
+        <button class="time_button" onclick="request_adhkar(60)">60 Seconds</button>
+        <button class="time_button" onclick="request_adhkar(30)">30 Seconds</button>
+        <button class="time_button" onclick="request_adhkar(10)">10 Seconds</button>
+
+        <div class="time_button time_button_other" onclick="custom_time()">
+            <input type="text" class="" id="custom_time_input" value="120"></input>
+            <button class="time_button" onclick="custom_time()">Other</button>
+        </div>
+
+
     </div>
 
 
+    <hr />
+
+    <div id="resultsContainer" class="grid"></div>
+
+
+
 <script>
+const default_time = 30;
+
+function custom_time(){
+    var time = default_time;
+
+    custom_elem = document.getElementById("custom_time_input")
+
+    if(custom_elem && custom_elem.value){
+        time = custom_elem.value
+    }
+
+    request_adhkar(time)
+}
 
 function parseResponseToHTML(dhikr){
     finalText  =  '<div class="result_box">'
@@ -137,7 +197,7 @@ function parseResponseToHTML(dhikr){
 }
 
 
-function request_adhkar(){
+function request_adhkar(time){
   xhr = new XMLHttpRequest();
 
   xhr.onreadystatechange = function() {
@@ -154,7 +214,12 @@ function request_adhkar(){
         document.getElementById("resultsContainer").innerHTML = newText;
     }
   };
-  xhr.open("GET", "/adhkar/query?time=30");
+
+  if(!time){
+      time = default_time;
+  }
+  console.log("Making request with time:", time)
+  xhr.open("GET", "/adhkar/query?time=" + time);
 
   xhr.send();
 }
