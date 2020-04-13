@@ -77,6 +77,7 @@ def is_development_mode():
 #       DB Setup
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import desc
 import sys
 from flask_heroku import Heroku
 
@@ -173,9 +174,35 @@ def gratitudeReadAll():
     return "<br />".join(allReasons)
 
 
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+#       Adkhar app
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+@app.route('/adhkar')
+def adhkar_with_time():
+    time = request.args.get('time')
+    if(time == 0 or time == None):
+        time = 60
+
+    print("time", time);
+    adhkar_list = Adhkarentry.query.filter(Adhkarentry.secondsToRecite <= time).order_by(desc(Adhkarentry.secondsToRecite)).limit(5)
+
+    result = [];
+
+    for dhikr in adhkar_list:
+        oneResult = {
+            "arabic": dhikr.arabic,
+            "english": dhikr.english,
+            "description": dhikr.shortDescription,
+            "time_in_seconds": dhikr.secondsToRecite,
+        }
+        result.append(oneResult)
+
+    return json.dumps(result) #"<br />".join(result)
+
 
 @app.route('/adhkar/all')
 def all():
+
     adhkar_list = Adhkarentry.query.all()
 
     result = [];
@@ -190,6 +217,7 @@ def all():
         result.append(oneResult)
 
     return json.dumps(result) #"<br />".join(result)
+
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 #       Setup and run main app
