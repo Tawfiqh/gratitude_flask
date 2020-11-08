@@ -56,11 +56,11 @@ def gratitudeSimpleAll():
 
 @app.route('/frontend/<path:path>')
 def send_frontend(path):
-    return send_from_directory('frontend', path)
+    return send_from_directory('gratitude_frontend', path)
 
 @app.route('/')
 def send_frontend_index():
-    return send_from_directory('frontend', "frontend.html")
+    return send_frontend("frontend.html")
 
 
 
@@ -179,7 +179,7 @@ def gratitudeReadAll():
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 @app.route('/adhkar/')
 def adhkar_frontend():
-    return send_from_directory('adhkar_frontend', "frontend.html")
+    return send_from_directory('adhkar_frontend', "index.html")
 
 @app.route('/adhkar/query')
 def adhkar_time_query():
