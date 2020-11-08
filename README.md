@@ -1,5 +1,12 @@
 # Flask backend for gratitude app.
 
+## Run it locally
+```fish
+$ ./startServer.sh
+```
+
+
+
 ## Setup on heroku:
 ```fish
 $ heroku config:set FLASK_ENV=production --app gratitude-py
