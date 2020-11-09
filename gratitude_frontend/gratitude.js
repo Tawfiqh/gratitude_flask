@@ -1,20 +1,27 @@
 "use strict";
-var urlParams = new URLSearchParams(window.location.search);
-var myPassword = urlParams.get('password');
-var gratitudeURL;
-if (myPassword != null) {
+function urlParamsGetPassword() {
+    var urlParams = new URLSearchParams(window.location.search);
+    var password = urlParams.get('password');
+    return password;
+}
+// Default simple url - no password
+var gratitudeURL = "/gratitude_simple";
+// If a password is found, then set new URL endpoint.
+var myPassword = urlParamsGetPassword();
+if (myPassword) {
     gratitudeURL = "/gratitude?password=" + myPassword;
 }
-else {
-    gratitudeURL = "/gratitude_simple";
+function getNewGratitudeReason() {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            var textDisplay = document.getElementById("gratitude");
+            textDisplay.innerHTML = this.responseText;
+        }
+    };
+    console.log("Firing off new request to:" + gratitudeURL);
+    xhr.open("GET", gratitudeURL);
+    xhr.send();
 }
-var xhr = new XMLHttpRequest();
-var document = document || { getElementById: "" };
-xhr.onreadystatechange = function () {
-    if (this.readyState == 4 && this.status == 200) {
-        var textDisplay = document.getElementById("gratitude");
-        textDisplay.innerHTML = this.responseText;
-    }
-};
-xhr.open("GET", gratitudeURL);
-xhr.send();
+getNewGratitudeReason();
+document.body.addEventListener('click', getNewGratitudeReason, true);
