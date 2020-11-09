@@ -1,19 +1,20 @@
-const urlParams = new URLSearchParams(window.location.search);
-const myPassword = urlParams.get('password');
+"use strict";
+var urlParams = new URLSearchParams(window.location.search);
+var myPassword = urlParams.get('password');
+var gratitudeURL;
 if (myPassword != null) {
-    gratitudeURL = "/gratitude?password=" + myPassword
+    gratitudeURL = "/gratitude?password=" + myPassword;
 }
 else {
-    gratitudeURL = "/gratitude_simple"
+    gratitudeURL = "/gratitude_simple";
 }
-
-xhr = new XMLHttpRequest();
-
+var xhr = new XMLHttpRequest();
+var document = document || { getElementById: "" };
 xhr.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
-        document.getElementById("gratitude").innerHTML = this.responseText;
+        var textDisplay = document.getElementById("gratitude");
+        textDisplay.innerHTML = this.responseText;
     }
 };
 xhr.open("GET", gratitudeURL);
-
 xhr.send();

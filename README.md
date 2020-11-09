@@ -4,8 +4,7 @@
 ```fish
 $ ./startServer.sh
 ```
-
-
+s
 
 ## Setup on heroku:
 ```fish
