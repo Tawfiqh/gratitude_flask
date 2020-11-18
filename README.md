@@ -3,7 +3,7 @@
 
 # App Structure 
 `wsgi.py` runs on first load
-
+It just imports api.py and runs that
 
 
 # Running the app
