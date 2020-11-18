@@ -3,8 +3,17 @@
 
 # App Structure 
 `wsgi.py` runs on first load
-It just imports api.py and runs that
+It just imports api.py and runs that.
 
+
+
+# Pipenv
+
+```bash
+$ export PIPENV_VENV_IN_PROJECT="enabled" #make sure it is made in the current directory.
+$ pipenv shell # this will activate the piepnv or create a new one
+% pipenv
+```
 
 # Running the app
 ## Run it locally

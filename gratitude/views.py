@@ -4,28 +4,35 @@ import os
 import random
 import json
 
-app = Flask(__name__)
+from gratitude import app
+
+# New added with - packages
+# @app.route('/')
+# def index():
+#     return 'Hello World! FROM Pacakge route!!!'
 
 
-# from adhkar import adhkarRoutes
+
+    # from adhkar import adhkarRoutes
 # app.register_blueprint(adhkarRoutes, url_prefix='/adhkar')
 
-from misc_routes import miscRoutes
-app.register_blueprint(miscRoutes)
+from gratitude import misc_routes
+app.register_blueprint(misc_routes.miscRoutes)
 
 
 gratitudeReasons = [
-    "Loving parents",
-    "Having a roof over my head",
-    "Good friends",
-    "Always being clothed",
-    "Always being fed",
-    "Good health",
-    "Eyesight",
-    "Being able to walk, talk",
-    "Warmth",
-    "Peaceful political climate",
+    '- Loving parents -',
+    '- Having a roof over my head -',
+    '- Good friends -',
+    '- Always being clothed -',
+    '- Always being fed -',
+    '- Good health -',
+    '- Eyesight -',
+    '- Being able to walk, talk -',
+    '- Warmth -',
+    '- Peaceful political climate -',
 ];
+
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 #       Gratitude simple
@@ -70,7 +77,8 @@ def send_frontend_index():
 #       Environment setup
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 def is_development_mode():
-    return (os.environ['FLASK_ENV'] == "development")
+    flask_envi = os.getenv('FLASK_ENV');
+    return (flask_envi == "development")
 
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -84,7 +92,8 @@ from flask_heroku import Heroku
 heroku = Heroku(app)
 
 if(is_development_mode()):
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///dataentry.sqlite3';
+    db_file = 'sqlite:///' + os.getenv('DB_FILE','dataentry.sqlite3');
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_file
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -122,10 +131,11 @@ class Adhkarentry(db.Model):
 #       Gratitude complex
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 def check_password():
-    password = request.args.get('password')
-    # print("password:", password)
-    if(password != os.environ['FLASK_PASSWORD']):
-        abort(400);
+    supplied_password = request.args.get('password')
+    print("password:", supplied_password)
+    app_password = os.getenv('FLASK_PASSWORD')
+    if(supplied_password != app_password):
+        abort(401);
 
 @app.route('/gratitude/submit', methods = ['GET'])
 def post_to_db():
@@ -153,11 +163,13 @@ def gratitudeComplex():
     check_password();
     random.seed()
     gratitudeReasonObjects = Dataentry.query.all()
-
+    
     gratitudeReasons = [];
     for reason in gratitudeReasonObjects:
         gratitudeReasons.append(reason.data)
-
+    print("grabbed list of reasons from db:",gratitudeReasons)
+    if(len(gratitudeReasons)==0):
+        return gratitudeSimple();
     return random.choice(gratitudeReasons)
 
 

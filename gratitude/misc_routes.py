@@ -8,11 +8,13 @@ miscRoutes = Blueprint('misc', __name__,)
 #       Inane miscelania
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 @miscRoutes.route('/hi')
+# @app.route('/hi')
 def hello_world2():
     return 'Hi, World!'
 
 
 @miscRoutes.route('/time')
+# @app.route('/time')
 def current_time():
     today = datetime.now()
     result =  today.strftime("%H:%M:%S on %d %B, %Y: ") + "Hello world"
