@@ -1,11 +1,20 @@
 # Flask backend for gratitude app.
 
+
+# App Structure 
+`wsgi.py` runs on first load
+
+
+
+# Running the app
 ## Run it locally
 ```fish
 $ ./startServer.sh
 ```
 s
 
+
+# Heroku setup
 ## Setup on heroku:
 ```fish
 $ heroku config:set FLASK_ENV=production --app gratitude-py
@@ -25,9 +34,7 @@ Then in the python console:
 
 for local:
 ```bash
-export FLASK_APP=api.py
-export FLASK_ENV=development
-export FLASK_PASSWORD=abc
+source .env
 flask shell
 ```
 
@@ -38,14 +45,17 @@ and then run:
 ```
 
 
-Can then create entries through command line easilly.
-```fish
-$ curl -G "https://gratitude-py.herokuapp.com/gratitude/submit" --data-urlencode "password=password" --data-urlencode "data=Warmth"
-```
-
-
 ## Seeing application logs on heroku
 
 ```fish
 $ heroku logs --tail --app gratitude-py
 ```
+
+
+
+# Creating new entries 
+Can then create entries through command line easilly.
+```fish
+$ curl -G "https://gratitude-py.herokuapp.com/gratitude/submit" --data-urlencode "password=password" --data-urlencode "data=Warmth"
+```
+
