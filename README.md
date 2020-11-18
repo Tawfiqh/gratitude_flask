@@ -18,9 +18,9 @@ $ pipenv shell # this will activate the piepnv or create a new one
 # Running the app
 ## Run it locally
 ```fish
-$ ./startServer.sh
+$ pipenv shell
+% ./startServer.sh
 ```
-s
 
 
 # Heroku setup
