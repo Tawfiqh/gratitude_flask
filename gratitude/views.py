@@ -131,7 +131,11 @@ class Adhkarentry(db.Model):
 #       Gratitude complex
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 def check_password():
-    supplied_password = request.args.get('password')
+    supplied_password = None;
+    
+    if 'authorization' in request.headers:
+        supplied_password = request.headers['authorization']
+
     print("password:", supplied_password)
     app_password = os.getenv('FLASK_PASSWORD')
     if(supplied_password != app_password):
