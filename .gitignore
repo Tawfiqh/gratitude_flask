@@ -3,3 +3,4 @@
 *.sqlite3
 .DS_Store
 data/.ipynb_checkpoints/
+test.db

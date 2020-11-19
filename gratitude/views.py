@@ -5,12 +5,7 @@ import random
 import json
 
 from gratitude import app
-
-# New added with - packages
-# @app.route('/')
-# def index():
-#     return 'Hello World! FROM Pacakge route!!!'
-
+from . models import Dataentry, Adhkarentry
 
 
     # from adhkar import adhkarRoutes
@@ -98,41 +93,21 @@ if(is_development_mode()):
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db = SQLAlchemy(app)
 
-
-class Dataentry(db.Model):
-    __tablename__ = "dataentry"
-    id = db.Column(db.Integer, primary_key=True)
-    data = db.Column(db.Text())
-
-    def __init__ (self, data):
-        self.data = data
-
+# db = SQLAlchemy(app)
+db = SQLAlchemy()
+db.init_app(app)
 
 if(is_development_mode()):
-    db.create_all()
-
-
-class Adhkarentry(db.Model):
-    __tablename__ = "adhkar"
-    id = db.Column(db.Integer, primary_key=True)
-    arabic = db.Column(db.Text())
-    english = db.Column(db.Text())
-    secondsToRecite = db.Column(db.Integer)
-    minutesToRecite = db.Column(db.Integer)
-    shortDescription = db.Column(db.Text())
-
-    def __init__ (self, data):
-        self.data = data
-
+    with app.app_context():
+        db.create_all()
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 #       Gratitude complex
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 def check_password():
     supplied_password = None;
-    
+
     if 'authorization' in request.headers:
         supplied_password = request.headers['authorization']
 
@@ -197,6 +172,7 @@ def gratitudeReadAll():
 def adhkar_frontend():
     return send_from_directory('adhkar_frontend', "index.html")
 
+# Limit of 5
 @app.route('/adhkar/query')
 def adhkar_time_query():
     time = request.args.get('time')
@@ -217,7 +193,7 @@ def adhkar_time_query():
         }
         result.append(oneResult)
 
-    return json.dumps(result) #"<br />".join(result)
+    return json.dumps(result), {'Content-Type': 'application/json'}
 
 
 @app.route('/adhkar/all')
@@ -236,18 +212,5 @@ def all():
         }
         result.append(oneResult)
 
-    return json.dumps(result) #"<br />".join(result)
+    return json.dumps(result), {'Content-Type': 'application/json'}
 
-
-# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-#       Setup and run main app
-# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-
-if __name__ == "__main__":
-    app.debug = True
-    application.run(host='0.0.0.0')
-
-
-# @app.teardown_appcontext
-# def shutdown_session(exception=None):
-#     db.session.remove()
