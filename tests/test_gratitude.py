@@ -49,16 +49,10 @@ def some_db(request):
 @pytest.fixture
 def client():
     load_dotenv()
-    # db_fd, flaskr.app.config['DATABASE'] = tempfile.mkstemp()
     gratitude.app.config['TESTING'] = True
 
     with gratitude.app.test_client() as client:
-        # with gratitude.app.app_context():
-        #     gratitude.init_db()
         yield client
-
-    # os.close(db_fd)
-    # os.unlink(gratitude.app.config['DATABASE'])
 
 gratitudeReasons = [
     '- Loving parents -',
